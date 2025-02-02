@@ -4,16 +4,20 @@ import requests
 import os
 from newspaper import Article
 
+bearer_token = os.getenv("BEARER_TOKEN")
 consumer_key = os.getenv("CONSUMER_KEY")
 consumer_secret = os.getenv("CONSUMER_SECRET")
 access_token = os.getenv("ACCESS_TOKEN")
 access_token_secret = os.getenv("ACCESS_SECRET")
-
 HF_API_KEY = os.getenv("HF_API_KEY")
 
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
-api = tweepy.API(auth)
+client = tweepy.Client(
+    bearer_token=bearer_token,
+    consumer_key=consumer_key,
+    consumer_secret=consumer_secret,
+    access_token=access_token,
+    access_token_secret=access_token_secret
+)
 
 RSS_URL = "https://seekingalpha.com/tag/market-outlook/feed"
 
@@ -48,7 +52,8 @@ def fetch_news():
     response = requests.post(
         "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
         headers=headers,
-        json=payload)
+        json=payload
+    )
 
     if response.status_code == 200:
         summary = response.json()[0]['summary_text']
@@ -56,9 +61,15 @@ def fetch_news():
         summary = title
 
     tweet = summary[:280]
-    api.update_status(tweet)
-    print("Tweet posted:", tweet)
+    post_tweet(tweet)
 
+def post_tweet(tweet):
+    """Post a tweet using Twitter API v2"""
+    try:
+        response = client.create_tweet(text=tweet)
+        print("Tweet posted successfully:", response.data)
+    except tweepy.TweepyException as e:
+        print("Error posting tweet:", e)
 
 if __name__ == '__main__':
     fetch_news()
