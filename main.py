@@ -6,17 +6,19 @@ import time
 from flask import Flask
 from newspaper import Article
 
-consumer_key = "Aun6XvxMFFa4ZfymqnYhJwhVh"
-consumer_secret = "E1zrQ60pPtWz5jbAZDKVttlrUako3zInqlmgZvQYsFgJ6X05By"
-access_token = "1885695007543484416-aDXOtK6VAqims9UAWkslmnW8Ll9CRX"
-access_token_secret = "IIkvXyuMW2kDojfQFFVwX7kglqHnmVQhD3JZH2Rs14fXl"
+import os
+
+consumer_key = os.getenv("CONSUMER_KEY")
+consumer_secret = os.getenv("CONSUMER_SECRET")
+access_token = os.getenv("ACCESS_TOKEN")
+access_token_secret = os.getenv("ACCESS_SECRET")
+
+HF_API_KEY = os.getenv("HF_API_KEY")
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
-import os
-HF_API_KEY = os.getenv("HF_API_KEY")
 
 RSS_URL = "https://seekingalpha.com/tag/market-outlook/feed"
 
