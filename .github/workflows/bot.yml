@@ -18,11 +18,12 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install dependencies
+            - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install lxml_html_clean
           pip install -r requirements.txt
+
 
       - name: Run bot
         env:
