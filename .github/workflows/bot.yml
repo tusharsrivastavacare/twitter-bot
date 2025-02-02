@@ -1,0 +1,34 @@
+name: Run Twitter Bot
+
+on:
+  schedule:
+    - cron: '0 * * * *' 
+  workflow_dispatch: 
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install tweepy feedparser requests schedule flask newspaper3k
+
+      - name: Run bot
+        env:
+          CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
+          CONSUMER_SECRET: ${{ secrets.CONSUMER_SECRET }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          ACCESS_SECRET: ${{ secrets.ACCESS_SECRET }}
+          HF_API_KEY: ${{ secrets.HF_API_KEY }}
+        run: python main.py
+
