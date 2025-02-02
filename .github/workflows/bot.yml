@@ -3,7 +3,7 @@ name: Run Twitter Bot
 on:
   schedule:
     - cron: '0 * * * *' 
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   run-bot:
@@ -20,8 +20,9 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pip install --upgrade pip
+          pip install lxml_html_clean
           pip install -r requirements.txt
-          pip install tweepy feedparser requests schedule flask newspaper3k
 
       - name: Run bot
         env:
@@ -31,4 +32,3 @@ jobs:
           ACCESS_SECRET: ${{ secrets.ACCESS_SECRET }}
           HF_API_KEY: ${{ secrets.HF_API_KEY }}
         run: python main.py
-
