@@ -18,12 +18,12 @@ jobs:
         with:
           python-version: '3.9'
 
-            - name: Install dependencies
+      - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install lxml_html_clean
           pip install -r requirements.txt
-
+          pip install tweepy feedparser requests schedule flask newspaper3k
 
       - name: Run bot
         env:
