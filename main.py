@@ -1,12 +1,8 @@
 import tweepy
 import feedparser
 import requests
-import schedule
-import time
-from flask import Flask
-from newspaper import Article
-
 import os
+from newspaper import Article
 
 consumer_key = os.getenv("CONSUMER_KEY")
 consumer_secret = os.getenv("CONSUMER_SECRET")
@@ -19,9 +15,7 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
-
 RSS_URL = "https://seekingalpha.com/tag/market-outlook/feed"
-
 
 def fetch_news():
     """Fetch news, summarize using Hugging Face, and post to Twitter."""
@@ -66,24 +60,5 @@ def fetch_news():
     print("Tweet posted:", tweet)
 
 
-schedule.every().hour.at(":00").do(fetch_news)
-
-app = Flask(__name__)
-
-
-@app.route('/')
-def home():
-    return "Bot is running!"
-
-
-def run_schedule():
-    """Keep the bot running."""
-    while True:
-        schedule.run_pending()
-        time.sleep(60)
-
-
 if __name__ == '__main__':
-    from threading import Thread
-    Thread(target=run_schedule).start()
-    app.run(host="0.0.0.0", port=8080)
+    fetch_news()
